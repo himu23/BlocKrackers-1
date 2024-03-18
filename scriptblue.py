@@ -98,117 +98,151 @@ def spread(pirate):
         return moveTo(x-1 , y-1 , pirate)
 #
 
+#Functions from samples
+def Sample1_ActPirate(pirate):
+    up = pirate.investigate_up()
+    down = pirate.investigate_down()
+    left = pirate.investigate_left()
+    right = pirate.investigate_right()
+    x, y = pirate.getPosition()
+    pirate.setSignal("")
+    s = pirate.trackPlayers()
+    
+    if (
+        (up == "island1" and s[0] != "myCaptured")
+        or (up == "island2" and s[1] != "myCaptured")
+        or (up == "island3" and s[2] != "myCaptured")
+    ):
+        s = up[-1] + str(x) + "," + str(y - 1)
+        pirate.setTeamSignal(s)
+
+    if (
+        (down == "island1" and s[0] != "myCaptured")
+        or (down == "island2" and s[1] != "myCaptured")
+        or (down == "island3" and s[2] != "myCaptured")
+    ):
+        s = down[-1] + str(x) + "," + str(y + 1)
+        pirate.setTeamSignal(s)
+
+    if (
+        (left == "island1" and s[0] != "myCaptured")
+        or (left == "island2" and s[1] != "myCaptured")
+        or (left == "island3" and s[2] != "myCaptured")
+    ):
+        s = left[-1] + str(x - 1) + "," + str(y)
+        pirate.setTeamSignal(s)
+
+    if (
+        (right == "island1" and s[0] != "myCaptured")
+        or (right == "island2" and s[1] != "myCaptured")
+        or (right == "island3" and s[2] != "myCaptured")
+    ):
+        s = right[-1] + str(x + 1) + "," + str(y)
+        pirate.setTeamSignal(s)
+
+    
+    if pirate.getTeamSignal() != "":
+        s = pirate.getTeamSignal()
+        l = s.split(",")
+        x = int(l[0][1:])
+        y = int(l[1])
+    
+        return moveTo(x, y, pirate)
+
+    else:
+        if frame < 200:
+            #to be optimised according to deploy point
+            return numpy.random.choice(numpy.arange(1, 5), p=[0.4,0.1,0.1,0.4])
+        else:
+            return random.randint(1,4)
+
+def Sample4_ActPirate(pirate):
+    up = pirate.investigate_up()[0]
+    down = pirate.investigate_down()[0]
+    left = pirate.investigate_left()[0]
+    right = pirate.investigate_right()[0]
+    x, y = pirate.getPosition()
+    pirate.setSignal("")
+    s = pirate.trackPlayers()
+    
+    if (
+        (up == "island1" and s[0] != "myCaptured")
+        or (up == "island2" and s[1] != "myCaptured")
+        or (up == "island3" and s[2] != "myCaptured")
+    ):
+        s = up[-1] + str(x) + "," + str(y - 1)
+        pirate.setTeamSignal(s)
+
+    if (
+        (down == "island1" and s[0] != "myCaptured")
+        or (down == "island2" and s[1] != "myCaptured")
+        or (down == "island3" and s[2] != "myCaptured")
+    ):
+        s = down[-1] + str(x) + "," + str(y + 1)
+        pirate.setTeamSignal(s)
+
+    if (
+        (left == "island1" and s[0] != "myCaptured")
+        or (left == "island2" and s[1] != "myCaptured")
+        or (left == "island3" and s[2] != "myCaptured")
+    ):
+        s = left[-1] + str(x - 1) + "," + str(y)
+        pirate.setTeamSignal(s)
+
+    if (
+        (right == "island1" and s[0] != "myCaptured")
+        or (right == "island2" and s[1] != "myCaptured")
+        or (right == "island3" and s[2] != "myCaptured")
+    ):
+        s = right[-1] + str(x + 1) + "," + str(y)
+        pirate.setTeamSignal(s)
+
+    
+    if pirate.getTeamSignal() != "":
+        s = pirate.getTeamSignal()
+        l = s.split(",")
+        x = int(l[0][1:])
+        y = int(l[1])
+    
+        return moveTo(x, y, pirate)
+
+    else:
+        return spread(pirate)
+
+def Sample1_ActTeam(team):
+    phase = 1
+    l = team.trackPlayers()
+    s = team.getTeamSignal()
+
+    if s:
+        island_no = int(s[0])
+        signal = l[island_no - 1]
+        if signal == "myCaptured":
+            team.setTeamSignal("")
+
+def Sample4_ActTeam(team):
+    phase =2
+    l = team.trackPlayers()
+    s = team.getTeamSignal()
+
+    team.buildWalls(1)
+    team.buildWalls(2)
+    team.buildWalls(3)
+
+    if s:
+        island_no = int(s[0])
+        signal = l[island_no - 1]
+        if signal == "myCaptured":
+            team.setTeamSignal("")
+
+#
 #CODE
 def ActPirate(pirate):
     global frame
     if phase == 1:
-        up = pirate.investigate_up()
-        down = pirate.investigate_down()
-        left = pirate.investigate_left()
-        right = pirate.investigate_right()
-        x, y = pirate.getPosition()
-        pirate.setSignal("")
-        s = pirate.trackPlayers()
-        
-        if (
-            (up == "island1" and s[0] != "myCaptured")
-            or (up == "island2" and s[1] != "myCaptured")
-            or (up == "island3" and s[2] != "myCaptured")
-        ):
-            s = up[-1] + str(x) + "," + str(y - 1)
-            pirate.setTeamSignal(s)
-
-        if (
-            (down == "island1" and s[0] != "myCaptured")
-            or (down == "island2" and s[1] != "myCaptured")
-            or (down == "island3" and s[2] != "myCaptured")
-        ):
-            s = down[-1] + str(x) + "," + str(y + 1)
-            pirate.setTeamSignal(s)
-
-        if (
-            (left == "island1" and s[0] != "myCaptured")
-            or (left == "island2" and s[1] != "myCaptured")
-            or (left == "island3" and s[2] != "myCaptured")
-        ):
-            s = left[-1] + str(x - 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-
-        if (
-            (right == "island1" and s[0] != "myCaptured")
-            or (right == "island2" and s[1] != "myCaptured")
-            or (right == "island3" and s[2] != "myCaptured")
-        ):
-            s = right[-1] + str(x + 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-
-        
-        if pirate.getTeamSignal() != "":
-            s = pirate.getTeamSignal()
-            l = s.split(",")
-            x = int(l[0][1:])
-            y = int(l[1])
-        
-            return moveTo(x, y, pirate)
-
-        else:
-            if frame < 200:
-                #to be optimised according to deploy point
-                return numpy.random.choice(numpy.arange(1, 5), p=[0.4,0.1,0.1,0.4])
-            else:
-                return random.randint(1,4)
+        Sample1_ActPirate(pirate)
     elif phase == 2:
-        up = pirate.investigate_up()[0]
-        down = pirate.investigate_down()[0]
-        left = pirate.investigate_left()[0]
-        right = pirate.investigate_right()[0]
-        x, y = pirate.getPosition()
-        pirate.setSignal("")
-        s = pirate.trackPlayers()
-        
-        if (
-            (up == "island1" and s[0] != "myCaptured")
-            or (up == "island2" and s[1] != "myCaptured")
-            or (up == "island3" and s[2] != "myCaptured")
-        ):
-            s = up[-1] + str(x) + "," + str(y - 1)
-            pirate.setTeamSignal(s)
-
-        if (
-            (down == "island1" and s[0] != "myCaptured")
-            or (down == "island2" and s[1] != "myCaptured")
-            or (down == "island3" and s[2] != "myCaptured")
-        ):
-            s = down[-1] + str(x) + "," + str(y + 1)
-            pirate.setTeamSignal(s)
-
-        if (
-            (left == "island1" and s[0] != "myCaptured")
-            or (left == "island2" and s[1] != "myCaptured")
-            or (left == "island3" and s[2] != "myCaptured")
-        ):
-            s = left[-1] + str(x - 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-
-        if (
-            (right == "island1" and s[0] != "myCaptured")
-            or (right == "island2" and s[1] != "myCaptured")
-            or (right == "island3" and s[2] != "myCaptured")
-        ):
-            s = right[-1] + str(x + 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-
-        
-        if pirate.getTeamSignal() != "":
-            s = pirate.getTeamSignal()
-            l = s.split(",")
-            x = int(l[0][1:])
-            y = int(l[1])
-        
-            return moveTo(x, y, pirate)
-
-        else:
-            return spread(pirate)
+        Sample4_ActPirate(phase)
 
 #CODE
 def ActTeam(team):
@@ -234,28 +268,7 @@ def ActTeam(team):
     
     #phase1
     if flag == 0 :
-        phase = 1
-        l = team.trackPlayers()
-        s = team.getTeamSignal()
-
-        if s:
-            island_no = int(s[0])
-            signal = l[island_no - 1]
-            if signal == "myCaptured":
-                team.setTeamSignal("")
-
+        Sample1_ActTeam(team)
     #phase2
     else:
-        phase =2
-        l = team.trackPlayers()
-        s = team.getTeamSignal()
-
-        team.buildWalls(1)
-        team.buildWalls(2)
-        team.buildWalls(3)
-
-        if s:
-            island_no = int(s[0])
-            signal = l[island_no - 1]
-            if signal == "myCaptured":
-                team.setTeamSignal("")
+        Sample4_ActTeam(team)
