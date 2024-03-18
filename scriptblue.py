@@ -100,6 +100,8 @@ def spread(pirate):
 
 #CODE
 def ActPirate(pirate):
+    deploy=pirate.getDeployPoint()
+    piratenos=pirate.getID()
     global frame
     if phase == 1:
         up = pirate.investigate_up()
@@ -152,11 +154,23 @@ def ActPirate(pirate):
             return moveTo(x, y, pirate)
 
         else:
-            if frame < 200:
-                #to be optimised according to deploy point
-                return numpy.random.choice(numpy.arange(1, 5), p=[0.4,0.1,0.1,0.4])
+#            if frame < 200:
+#                #to be optimised according to deploy point
+#                if deploy[0]==39:            
+#                    return numpy.random.choice(numpy.arange(1, 5), p=[0.45,0.05,0.05,0.45])
+#                else:
+#                    return numpy.random.choice(numpy.arange(1, 5), p=[0.45,0.45,0.05,0.05])
+#            else:
+#                return random.randint(1,4)
+            if int(piratenos) < 20:
+                #first 20 pirates will diirectly go and attack
+                if deploy[0]==39:            
+                    return numpy.random.choice(numpy.arange(1, 5), p=[0.45,0.05,0.05,0.45])
+                else:
+                    return numpy.random.choice(numpy.arange(1, 5), p=[0.45,0.45,0.05,0.05])
             else:
                 return random.randint(1,4)
+
     elif phase == 2:
         up = pirate.investigate_up()[0]
         down = pirate.investigate_down()[0]
@@ -212,6 +226,7 @@ def ActPirate(pirate):
 
 #CODE
 def ActTeam(team):
+    deploy=team.getDeployPoint()
     global phase
     #Stage 1 implimentation
     l = team.trackPlayers()[3:]
